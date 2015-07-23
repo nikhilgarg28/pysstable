@@ -1,45 +1,33 @@
-from . import utils
 from . import writer
 from . import reader
 
 import random
-import string
-import time
-
-alphabet = string.ascii_letters
-
-def random_string(n):
-    return ''.join([random.choice(alphabet) for _ in range(n)])
-
-def test_encode_decode():
-    for _ in range(20):
-        key = random_string(10)
-        value = random_string(10)
-        line = utils.encode(key, value)
-        assert (key, value) == utils.decode(line)
 
 
-def test_store_get():
-    d = {}
-    for _ in range(1000):
-        key = random_string(10)
-        value = random_string(10)
-        d[key] = value
+def random_bytes(n):
+    return bytes(random.getrandbits(8) for _ in range(n))
 
-    fname = 'test.log'
 
-    # write all the data to a pysstable file
-    assert writer.store(fname, d)
+def test_bytes():
+    N = 100000
+    ksize = random.randint(1, 20)
+    vsize = random.randint(1, 20)
+    keys = [random_bytes(ksize) for _ in range(N)]
+    values = [random_bytes(vsize) for _ in range(N)]
+    data = {k: v for k, v in zip(keys, values)}
+    fname = 'bytes.log'
 
-    # load the pysstable file in memory
-    reader.load(fname)
-    for key, value in d.items():
-        got = reader.get(key)
+    w = writer.Writer(fname)
+    w.store(data)
+
+    r = reader.Reader(fname)
+    for key, value in data.items():
+        got = r.get(key)
         assert value == got, '%s => %s, Got %s instead' % (key, value, got)
 
     # also make sure that some keys we did not put are not present
     for _ in range(1000):
-        key = random_string(10)
-        if key in d: continue
+        key = random_bytes(10)
+        if key in data: continue
 
-        assert reader.get(key) is None
+        assert r.get(key) is None

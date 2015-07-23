@@ -1,13 +1,12 @@
-from pysstable import utils, writer, reader
+from pysstable import writer, reader
 
 import random
-import struct
 import time
 
-MAX_ULONG = (1 << 64) - 1
 
 def random_long():
-    return str(random.randint(0, MAX_ULONG))
+    return bytes(random.getrandbits(8) for _ in range(8))
+
 
 def long_to_long(N):
     """Benchmarks pysstable when both keys/values represent unsigned longs.
@@ -35,17 +34,19 @@ def long_to_long(N):
     values = [random_long() for _ in range(N)]
     d = {k: v for k, v in zip(keys, values)}
     fname = 'long_to_long.log'
+    w = writer.Writer(fname)
 
     # benchmarking table writes
     start = time.clock()
-    writer.store(fname, d)
+    w.store(d)
     stop = time.clock()
     print('Time taken to store %d key/value pairs is: %d ms' % (N,
         (stop-start) * 1000))
 
     # benchmarking table loads
+    r = reader.Reader(fname)
     start = time.clock()
-    reader.load(fname)
+    r.load()
     stop = time.clock()
     print('Time taken to load %d key/value pairs is: %d ms' % (N,
         (stop-start) * 1000))
@@ -56,7 +57,7 @@ def long_to_long(N):
     total = 0
     for k in keys:
         start = time.clock()
-        v = reader.get(k)
+        v = r.get(k)
         stop = time.clock()
 
         assert v == d[k]
