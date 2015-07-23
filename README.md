@@ -12,7 +12,15 @@ Constraints and performance characterstics :
 2. Loading data is lot more efficient than inserting all the key/value pairs one
    by one.
 3. Read queries are not O(1) but O(log N)
+4. Low space overhead - pysstable stores additional 12 bytes per key. If
+   key/values are large (say few hundred bytes), this overhead is pretty small.
 
+Wishlist
+---------
+1. Even lower space overhead, especially if keys/values are smaller. If key/value are small, 
+   space overhead of 12 bytes per key will not be acceptable.
 
-Note: This is a really rudimentary implementation (for now) and can easily be made 
-faster, more featureful and more stable.
+2. Not loading the whole table in memory and only loading the index in the
+   memory.
+
+3. Exporting pysstable interface as thrift service.
