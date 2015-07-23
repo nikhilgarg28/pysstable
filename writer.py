@@ -1,6 +1,6 @@
 from . import utils
 
-def persist(fname, data):
+def store(fname, data):
     d = []
     for key, value in data.items():
         line = utils.encode(key, value)

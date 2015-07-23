@@ -14,19 +14,19 @@ def long_to_long(N):
 
     Results:
 
-    Time taken to persist 10K key/value pairs is: 15 ms
+    Time taken to store 10K key/value pairs is: 15 ms
     Time taken to load 10K key/value pairs is: 2 ms
     Time taken to read random key/value pairs in table of size 10K is: 0 ms
 
-    Time taken to persist 100K key/value pairs is: 169 ms
+    Time taken to store 100K key/value pairs is: 169 ms
     Time taken to load 100K key/value pairs is: 27 ms
     Time taken to read random key/value pairs in table of size 100K is: 0 ms
 
-    Time taken to persist 1M key/value pairs is: 2522 ms
+    Time taken to store 1M key/value pairs is: 2522 ms
     Time taken to load 1M key/value pairs is: 286 ms
     Time taken to read random key/value pairs in table of size 1M is: 0 ms
 
-    Time taken to persist 10M key/value pairs is: 42519 ms
+    Time taken to store 10M key/value pairs is: 42519 ms
     Time taken to load 10M key/value pairs is: 3412 ms
     Time taken to read random key/value pairs in table of size 10M is: 0 ms
 
@@ -38,9 +38,9 @@ def long_to_long(N):
 
     # benchmarking table writes
     start = time.clock()
-    writer.persist(fname, d)
+    writer.store(fname, d)
     stop = time.clock()
-    print('Time taken to persist %d key/value pairs is: %d ms' % (N,
+    print('Time taken to store %d key/value pairs is: %d ms' % (N,
         (stop-start) * 1000))
 
     # benchmarking table loads
@@ -56,7 +56,7 @@ def long_to_long(N):
     total = 0
     for k in keys:
         start = time.clock()
-        v = reader.find(k)
+        v = reader.get(k)
         stop = time.clock()
 
         assert v == d[k]

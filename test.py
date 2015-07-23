@@ -19,7 +19,7 @@ def test_encode_decode():
         assert (key, value) == utils.decode(line)
 
 
-def test_persist_find():
+def test_store_get():
     d = {}
     for _ in range(1000):
         key = random_string(10)
@@ -29,12 +29,12 @@ def test_persist_find():
     fname = 'test.log'
 
     # write all the data to a pysstable file
-    assert writer.persist(fname, d)
+    assert writer.store(fname, d)
 
     # load the pysstable file in memory
     reader.load(fname)
     for key, value in d.items():
-        got = reader.find(key)
+        got = reader.get(key)
         assert value == got, '%s => %s, Got %s instead' % (key, value, got)
 
     # also make sure that some keys we did not put are not present
@@ -42,4 +42,4 @@ def test_persist_find():
         key = random_string(10)
         if key in d: continue
 
-        assert reader.find(key) is None
+        assert reader.get(key) is None

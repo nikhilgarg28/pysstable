@@ -15,7 +15,7 @@ def load(fname):
     return len(_data)
 
 
-def find(key):
+def get(key):
     global _data
     low = 0
     high = len(_data) - 1
