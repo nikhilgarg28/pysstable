@@ -19,7 +19,6 @@ def find(key):
     global _data
     low = 0
     high = len(_data) - 1
-    key += utils.DELIM
 
     # invariant is row of our interest is between [low, high] (both incl)
     while low < high:

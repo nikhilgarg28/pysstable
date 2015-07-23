@@ -1,11 +1,11 @@
-DELIM = '<@>'
+_DELIM = '<@>'
 
 def encode(key, value):
-    assert DELIM not in key
-    assert DELIM not in value
-    return key + DELIM + value
+    assert _DELIM not in key
+    assert _DELIM not in value
+    return key + _DELIM + value
 
 
 def decode(line):
-    key, value = line.split(DELIM)
+    key, value = line.split(_DELIM)
     return (key, value)
